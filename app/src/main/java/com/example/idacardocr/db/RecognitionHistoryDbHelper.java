@@ -55,7 +55,7 @@ public class RecognitionHistoryDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
+    // 插入历史记录
     public long insertHistory(String type, String cardSide, String resultJson, String summary) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -66,7 +66,7 @@ public class RecognitionHistoryDbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TIMESTAMP, System.currentTimeMillis());
         return db.insert(TABLE_HISTORY, null, values);
     }
-
+    // 查询历史记录
     public List<RecognitionHistory> getHistoryByType(String type, int limit) {
         List<RecognitionHistory> historyList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();

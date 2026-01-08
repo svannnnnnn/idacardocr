@@ -118,10 +118,12 @@ public class IdCardActivity extends AppCompatActivity implements ResultFieldAdap
             isDoubleMode = (checkedId == R.id.rbDouble);
             switchMode();
         });
+        // 上传人像面按钮点击事件
         findViewById(R.id.btnFront).setOnClickListener(v -> {
             currentCardSide = "FRONT";
             showImagePickerDialog();
         });
+        // 上传国徽面按钮点击事件
         findViewById(R.id.btnBackSide).setOnClickListener(v -> {
             currentCardSide = "BACK";
             showImagePickerDialog();
@@ -134,6 +136,7 @@ public class IdCardActivity extends AppCompatActivity implements ResultFieldAdap
             currentCardSide = "BACK";
             showImagePickerDialog();
         });
+        // 开始识别按钮点击事件
         btnRecognize.setOnClickListener(v -> startRecognition());
         btnReupload.setOnClickListener(v -> {
             if (isDoubleMode) showReuploadDialog();
@@ -258,12 +261,12 @@ public class IdCardActivity extends AppCompatActivity implements ResultFieldAdap
         }).show();
     }
 
-    private void openGallery() {
+    private void openGallery() {// 方式1：从相册选择
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryLauncher.launch(intent);
     }
 
-    private void openCamera() {
+    private void openCamera() {    // 方式2：调用系统相机拍照
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "请先授予相机权限", Toast.LENGTH_SHORT).show();
             return;
