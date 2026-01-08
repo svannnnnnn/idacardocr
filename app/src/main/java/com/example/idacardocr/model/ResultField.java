@@ -1,11 +1,15 @@
 package com.example.idacardocr.model;
 
+/**
+ * 识别结果字段模型
+ * 包含字段名、完整值、脱敏值，支持敏感信息隐藏显示
+ */
 public class ResultField {
-    private String fieldName;
-    private String fullValue;
-    private String maskedValue;
-    private boolean isSensitive;
-    private boolean isRevealed;
+    private String fieldName;      // 字段名
+    private String fullValue;      // 完整值
+    private String maskedValue;    // 脱敏值
+    private boolean isSensitive;   // 是否敏感字段
+    private boolean isRevealed;    // 是否已解锁
 
     public ResultField(String fieldName, String fullValue, boolean isSensitive) {
         this.fieldName = fieldName;
@@ -15,6 +19,13 @@ public class ResultField {
         this.maskedValue = isSensitive ? maskValue(fullValue, fieldName) : fullValue;
     }
 
+    /**
+     * 脱敏处理
+     * - 身份证号：显示前4后4
+     * - 银行卡号：显示前4后4
+     * - 姓名：显示姓，名用*
+     * - 地址：显示前6字符
+     */
     private String maskValue(String value, String fieldName) {
         if (value == null || value.equals("-") || value.isEmpty()) {
             return value;
@@ -72,6 +83,10 @@ public class ResultField {
         return maskedValue;
     }
 
+    /**
+     * 获取显示值
+     * 敏感字段未解锁时返回脱敏值，否则返回完整值
+     */
     public String getDisplayValue() {
         return (isSensitive && !isRevealed) ? maskedValue : fullValue;
     }

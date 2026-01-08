@@ -12,7 +12,7 @@ import okhttp3.Response;
 
 /**
  * 腾讯云OCR API客户端
- * 实现身份证和银行卡识别功能
+ * 封装身份证识别和银行卡识别接口
  */
 public class TencentOCRClient {
     
@@ -25,6 +25,7 @@ public class TencentOCRClient {
     private final OkHttpClient httpClient;
 
     public TencentOCRClient() {
+        // 从BuildConfig读取API密钥（由gradle从.env文件注入）
         String secretId = BuildConfig.TENCENT_SECRET_ID;
         String secretKey = BuildConfig.TENCENT_SECRET_KEY;
         this.signer = new TencentCloudSigner(secretId, secretKey);
@@ -33,9 +34,8 @@ public class TencentOCRClient {
 
     /**
      * 身份证识别
-     * @param imageBase64 图片的Base64编码
+     * @param imageBase64 图片Base64编码
      * @param cardSide FRONT-人像面, BACK-国徽面
-     * @return 识别结果JSON字符串
      */
     public String recognizeIDCard(String imageBase64, String cardSide) throws Exception {
         String action = "IDCardOCR";
@@ -48,8 +48,7 @@ public class TencentOCRClient {
 
     /**
      * 银行卡识别
-     * @param imageBase64 图片的Base64编码
-     * @return 识别结果JSON字符串
+     * @param imageBase64 图片Base64编码
      */
     public String recognizeBankCard(String imageBase64) throws Exception {
         String action = "BankCardOCR";
@@ -61,6 +60,7 @@ public class TencentOCRClient {
 
     /**
      * 调用腾讯云API
+     * 1. 生成签名 2. 发送HTTP请求
      */
     private String callAPI(String action, String payload) throws Exception {
         long timestamp = System.currentTimeMillis() / 1000;

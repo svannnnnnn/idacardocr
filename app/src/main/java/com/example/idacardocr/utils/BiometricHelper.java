@@ -10,6 +10,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.concurrent.Executor;
 
+/**
+ * 生物认证工具类
+ * 支持指纹、面容、设备密码三种认证方式
+ */
 public class BiometricHelper {
 
     public interface BiometricCallback {

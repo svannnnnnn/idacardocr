@@ -11,7 +11,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * 腾讯云API签名工具类
- * 实现TC3-HMAC-SHA256签名算法
+ * 
+ * 这个类是整个项目最头疼的部分，腾讯云的 TC3-HMAC-SHA256 签名算法搞了我好久
+ * 官方文档写得不太清楚，踩了不少坑：
+ * 1. 时间戳必须用 UTC 时区，不然签名会失败
+ * 2. canonicalHeaders 里的 action 要转小写，这个坑藏得很深
+ * 3. 签名用的是多层 HMAC，每一层的 key 都是上一层的结果
+ * 
+ * 参考了官方 SDK 源码才搞定：https://github.com/TencentCloud/tencentcloud-sdk-java
  */
 public class TencentCloudSigner {
 
@@ -27,18 +34,19 @@ public class TencentCloudSigner {
 
     /**
      * 生成签名信息
-     * @param host 请求域名
-     * @param service 服务名称
-     * @param action 接口名称
-     * @param payload 请求体
-     * @param timestamp 时间戳
-     * @return 签名结果
+     * 
+     * 签名流程分4步，每一步都不能出错：
+     * 1. 拼接规范请求串 CanonicalRequest
+     * 2. 拼接待签名字符串 StringToSign  
+     * 3. 用 SecretKey 派生签名密钥，然后计算签名
+     * 4. 把签名塞到 Authorization 头里
      */
     public SignResult sign(String host, String service, String action, String payload, long timestamp) throws Exception {
         String timestampStr = String.valueOf(timestamp);
 
+        // 这里必须用 UTC 时区！！！被这个坑了好久，本地时间会导致签名失败
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));// 关键：设置UTC时区
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String date = sdf.format(new Date(timestamp * 1000));
 
         // 步骤1：拼接规范请求串
@@ -57,10 +65,15 @@ public class TencentCloudSigner {
         return new SignResult(authorization, timestampStr);
     }
 
+    /**
+     * 拼接规范请求串
+     * 注意：x-tc-action 必须转小写，官方文档没写清楚这点，debug 了半天才发现
+     */
     private String buildCanonicalRequest(String host, String action, String payload) throws Exception {
         String httpRequestMethod = "POST";
         String canonicalUri = "/";
         String canonicalQueryString = "";
+        // action.toLowerCase() 是关键！不转小写签名会失败
         String canonicalHeaders = "content-type:application/json; charset=utf-8\n"
                 + "host:" + host + "\n"
                 + "x-tc-action:" + action.toLowerCase() + "\n";
@@ -83,6 +96,12 @@ public class TencentCloudSigner {
                 + hashedCanonicalRequest;
     }
 
+    /**
+     * 计算签名
+     * 这里用了多层 HMAC，每一层的输出作为下一层的 key
+     * TC3 + secretKey -> date -> service -> tc3_request -> 最终签名
+     * 感觉腾讯是故意搞这么复杂的...
+     */
     private String calculateSignature(String date, String service, String stringToSign) throws Exception {
         byte[] secretDate = hmac256(("TC3" + secretKey).getBytes(StandardCharsets.UTF_8), date);
         byte[] secretService = hmac256(secretDate, service);
