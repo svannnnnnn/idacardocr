@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="12dp"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- 字段名 -->
+    <TextView
+        android:id="@+id/tvFieldName"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#666666" />
+
+    <!-- 字段值 -->
+    <TextView
+        android:id="@+id/tvFieldValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_marginStart="8dp" />
+
+    <!-- 查看/隐藏按钮 -->
+    <ImageView
+        android:id="@+id/btnToggle"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_visibility_off"
+        android:contentDescription="查看"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone" />
+
+    <!-- 复制按钮 -->
+    <ImageView
+        android:id="@+id/btnCopy"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_copy"
+        android:contentDescription="复制"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

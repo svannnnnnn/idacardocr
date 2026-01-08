@@ -27,6 +27,14 @@
             </intent-filter>
         </activity>
         
+        <activity
+            android:name=".IdCardActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".BankCardActivity"
+            android:exported="false" />
+        
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

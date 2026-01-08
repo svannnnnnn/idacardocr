@@ -1,181 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".MainActivity">
+    android:background="@color/background_light"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <TextView
+        <!-- 标题区域 -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="腾讯云OCR识别"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp">
 
-        <!-- 身份证识别区域 -->
-        <com.google.android.material.card.MaterialCardView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_title"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_dark" />
+
+        </LinearLayout>
+
+        <!-- 身份证识别卡片 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardIdCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/card_bg_pink">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="身份证识别"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="20dp">
 
                 <ImageView
-                    android:id="@+id/ivIdCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:background="#F0F0F0"
-                    android:contentDescription="身份证图片"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_id_card"
+                    android:contentDescription="身份证图标" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
 
-                    <Button
-                        android:id="@+id/btnSelectIdCardFront"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="选择人像面"
-                        android:layout_marginEnd="8dp" />
+                        android:text="@string/id_card_recognition"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_dark" />
 
-                    <Button
-                        android:id="@+id/btnSelectIdCardBack"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="选择国徽面" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <Button
-                        android:id="@+id/btnCameraIdCardFront"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="拍摄人像面"
-                        android:layout_marginEnd="8dp"
-                        style="?attr/materialButtonOutlinedStyle" />
-
-                    <Button
-                        android:id="@+id/btnCameraIdCardBack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="拍摄国徽面"
-                        style="?attr/materialButtonOutlinedStyle" />
+                        android:text="识别身份证信息"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvIdCardResult"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="识别结果将显示在这里"
-                    android:textSize="14sp"
-                    android:padding="12dp"
-                    android:background="#F5F5F5"
-                    android:minHeight="100dp" />
+                    android:text="›"
+                    android:textSize="32sp"
+                    android:textColor="@color/primary_dark"
+                    android:alpha="0.5" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <!-- 银行卡识别区域 -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- 银行卡识别卡片 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardBankCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/card_bg_blue">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="银行卡识别"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="20dp">
 
                 <ImageView
-                    android:id="@+id/ivBankCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:background="#F0F0F0"
-                    android:contentDescription="银行卡图片"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_bank_card"
+                    android:contentDescription="银行卡图标" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
 
-                    <Button
-                        android:id="@+id/btnSelectBankCard"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="选择图片"
-                        android:layout_marginEnd="8dp" />
+                        android:text="@string/bank_card_recognition"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_dark" />
 
-                    <Button
-                        android:id="@+id/btnCameraBankCard"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="拍摄银行卡"
-                        style="?attr/materialButtonOutlinedStyle" />
+                        android:text="识别银行卡信息"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvBankCardResult"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="识别结果将显示在这里"
-                    android:textSize="14sp"
-                    android:padding="12dp"
-                    android:background="#F5F5F5"
-                    android:minHeight="100dp" />
+                    android:text="›"
+                    android:textSize="32sp"
+                    android:textColor="@color/primary_dark"
+                    android:alpha="0.5" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>

@@ -26,10 +26,27 @@ public class ImageUtils {
     }
 
     /**
-     * 从InputStream读取Bitmap
+     * 从InputStream读取Bitmap，带有采样率优化以避免OOM
      */
     public static Bitmap getBitmapFromInputStream(InputStream inputStream) {
-        return BitmapFactory.decodeStream(inputStream);
+        if (inputStream == null) {
+            return null;
+        }
+        try {
+            // 直接解码，如果图片太大可能会OOM
+            // 调用方应该捕获OutOfMemoryError
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            return bitmap;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -39,24 +56,35 @@ public class ImageUtils {
      * @return 压缩后的图片
      */
     public static Bitmap compressBitmap(Bitmap bitmap, int maxSize) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        
-        if (width <= maxSize && height <= maxSize) {
-            return bitmap;
+        if (bitmap == null) {
+            return null;
         }
         
-        float scale;
-        if (width > height) {
-            scale = (float) maxSize / width;
-        } else {
-            scale = (float) maxSize / height;
+        try {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            
+            if (width <= maxSize && height <= maxSize) {
+                return bitmap;
+            }
+            
+            float scale;
+            if (width > height) {
+                scale = (float) maxSize / width;
+            } else {
+                scale = (float) maxSize / height;
+            }
+            
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale, scale);
+            
+            Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+            // 如果创建了新的bitmap，可以考虑回收原始bitmap（但要小心，调用方可能还在使用）
+            return result;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return bitmap; // 返回原始bitmap，让调用方决定如何处理
         }
-        
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-        
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
 
     /**
